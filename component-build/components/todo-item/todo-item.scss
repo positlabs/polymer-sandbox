@@ -1,0 +1,21 @@
+@import 'bourbon';
+
+:host {
+
+	width: 100%;
+	background: #f3f3f3;
+	display: block;
+
+	paper-item {
+		@include transition(all .3s $ease-in-quart);
+		overflow: hidden;
+
+		&.done {
+			background: #BBB;
+		}
+		&.deleted {
+			@include transform(translateX(100%));
+		}
+	}
+
+}

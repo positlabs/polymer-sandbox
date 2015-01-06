@@ -1,0 +1,67 @@
+<link rel="import" href="../../bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="../../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../../bower_components/core-list/core-list.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../bower_components/core-localstorage/core-localstorage.html">
+<link rel="import" href="../todo-item/todo-item.html">
+
+<polymer-element name="todo-mvc">
+
+	<template>
+		<link rel="stylesheet" href="./todo-mvc.css">
+		
+		<core-localstorage id="model" name="todo-items" value="{{items}}"></core-localstorage>
+
+		<core-header-panel layout vertical>
+
+			<core-toolbar>
+				<h1>todo-mvc</h1>
+			</core-toolbar>
+
+			<div class='content-wrapper' vertical layout center >
+				<paper-input id="new-todo-input" label="Add a TODO item" committedValue="{{newTodo}}"></paper-input>
+
+				<template repeat='{{item, itemIndex in items}}'>
+					<todo-item done={{item.done}} text={{item.text}} on-done={{saveItems}} index={{itemIndex}} on-delete={{onDeleteItem}}></todo-item>
+				</template>
+				
+			</div>
+
+		</core-header-panel>
+
+	</template>
+	
+	<script>
+		Polymer('todo-mvc', {
+
+			ready: function(){
+				this.items = this.items || [];
+			},
+
+			newTodoChanged: function(oldVal, newVal){
+				this.$['new-todo-input'].value = '';
+				this.items.unshift({text: newVal, done: false});
+			},
+
+			saveItems: function(){
+				// console.log('saveItems', arguments);
+			    this.$.model.save();
+			},
+
+			onDeleteItem: function(e){
+				console.log('onDeleteItem', e, e.target.index);
+				var removed = this.items.splice(e.target.index, 1);
+				console.log(removed[0].text);
+			},
+
+			attributeChanged: function(attrName, oldVal, newVal) {
+			    //var newVal = this.getAttribute(attrName);
+			    // console.log(attrName, 'old: ' + oldVal, 'new:', newVal);
+			},
+
+		});
+	</script>
+
+</polymer-element>
+	
