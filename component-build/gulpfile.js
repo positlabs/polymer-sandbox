@@ -4,19 +4,23 @@ var vulcanize =     require('gulp-vulcanize'); // https://www.npmjs.com/package/
 var traceur =   	require('gulp-traceur'); // https://www.npmjs.com/package/gulp-traceur
 var bourbon =       require('node-bourbon');
 var rename =        require('gulp-rename');
-// var sourcemaps = 	require('gulp-sourcemaps');
+var jade = 			require('jade');
+var fs = 			require('fs');
+var merge = 		require('merge');
+var glob = 			require("glob")
 
+// var sourcemaps = 	require('gulp-sourcemaps');
 
 var paths = {
 	dist: 				'./dist/',
-	components:         './components/',
-	componentStyles:    './components/**/*.scss',
-	componentES6:       './components/**/*.es6.js',
+	components: 		'./components/',
+	componentSCSS: 		'./components/**/*.scss',
+	componentES6: 		'./components/**/*.es6.js',
 }
 
-gulp.task('componentStyles', function (){
+gulp.task('components:styles', function (){
 
-	gulp.src(paths.componentStyles)
+	gulp.src(paths.componentSCSS)
 		.pipe(sass({
 			errLogToConsole: true,
 			includePaths: bourbon.includePaths
@@ -24,14 +28,16 @@ gulp.task('componentStyles', function (){
 		.pipe(gulp.dest(paths.components));
 });
 
-gulp.task('traceur', function(){
+gulp.task('components:scripts', function(){
+	//TODO: sourcemaps. 
+
 	return gulp.src(paths.componentES6)
 		// .pipe(sourcemaps.init())
 		.pipe(traceur())
 		.pipe(rename(function (path) {
 			path.basename = path.basename.replace('.es6', '');
 		}))
-        // .pipe(sourcemaps.write('.'))
+		// .pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest(paths.components));
 
 });
@@ -39,7 +45,7 @@ gulp.task('traceur', function(){
 /**
 	junks all of the components together into one html file for production
 */ 
-gulp.task('components:concat', function () {
+gulp.task('components:vulcanize', function () {
 
 	return gulp.src('components/components.html')
 		
@@ -53,12 +59,46 @@ gulp.task('components:concat', function () {
 
 });
 
-//TODO: use gulp-watch instead. it can detect new files.
-gulp.task('watch', ['default'], function(){
-	gulp.watch(paths.componentStyles, ['componentStyles']);
-	gulp.watch(paths.componentES6, ['traceur']);
+/**
+	builds demo page for components
+*/
+gulp.task('components:demo', function () {
+
+	glob("components/**/*demo.html", function (err, files) {
+		if(err) console.log('ERROR: ', err);
+
+		files.forEach(function(file){
+
+			var pathSplit = file.split('/');
+			var demoName = pathSplit[pathSplit.length-2];
+
+			fs.readFile(file, function(err, data){
+				if(err) console.log('ERROR: ', err);
+
+				var options = {};
+				var locals = {
+					demoHTML: data
+				}; 
+				var html = jade.renderFile('components/demo/demo-template.jade', merge(options, locals));
+				
+				fs.writeFile("components/demo/" + demoName + ".html", html, function(err) {
+					if(err){ console.log(err); }
+				});
+
+			});
+			
+		});
+
+	});
+	
 });
 
-gulp.task('default', ['componentStyles', 'traceur'], function(){
+//TODO: use gulp-watch instead. it can detect new files.
+gulp.task('watch', ['default'], function(){
+	gulp.watch(paths.componentSCSS, ['components:styles']);
+	gulp.watch(paths.componentES6, ['components:scripts']);
+});
+
+gulp.task('default', ['components:styles', 'components:scripts'], function(){
 	
 });
