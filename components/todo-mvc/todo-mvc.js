@@ -18,3 +18,4 @@ Polymer('todo-mvc', {
     var removed = this.items.splice(e.target.index, 1);
   }
 });
+//# sourceURL=todo-mvc/todo-mvc.es6.js
