@@ -14,7 +14,9 @@ Polymer('todo-mvc', {
     this.$.model.save();
   },
   onDeleteItem: function(e) {
+    console.log('onDeleteItem', e, e.target.index);
     var removed = this.items.splice(e.target.index, 1);
   }
 });
 //# sourceURL=todo-mvc/todo-mvc.es6.js
+//# sourceMappingURL=../todo-mvc/todo-mvc.js.map

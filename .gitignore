@@ -1,3 +1,4 @@
 component-build/node_modules/
 component-build/bower_components/
 bower_components/
+npm-debug.log
