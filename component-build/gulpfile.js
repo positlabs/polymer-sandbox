@@ -1,7 +1,9 @@
 var gulp = 			require('gulp');
 var sass = 			require('gulp-sass'); // https://www.npmjs.com/package/gulp-sass
-var vulcanize = 	require('gulp-vulcanize'); // https://www.npmjs.com/package/gulp-vulcanize
+var vulcanize =     require('gulp-vulcanize'); // https://www.npmjs.com/package/gulp-vulcanize
+var traceur =   	require('gulp-traceur'); // https://www.npmjs.com/package/gulp-traceur
 var bourbon =       require('node-bourbon');
+var rename =        require('gulp-rename');
 
 var paths = {
 	dist: 				'./dist/',
@@ -18,6 +20,14 @@ gulp.task('componentStyles', function (){
         .pipe(gulp.dest('./components'));
 });
 
+gulp.task('traceur', function(){
+    return gulp.src('components/**/*.es6.js')
+        .pipe(traceur())
+        .pipe(rename(function (path) {
+            path.basename = path.basename.replace('.es6', '');
+        }))
+        .pipe(gulp.dest('./components'));
+});
 
 /**
 	junks all of the components together into one html file

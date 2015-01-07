@@ -31,37 +31,7 @@
 		</core-header-panel>
 
 	</template>
-	
-	<script>
-		Polymer('todo-mvc', {
-
-			ready: function(){
-				this.items = this.items || [];
-			},
-
-			newTodoChanged: function(oldVal, newVal){
-				this.$['new-todo-input'].value = '';
-				this.items.unshift({text: newVal, done: false});
-			},
-
-			saveItems: function(){
-				// console.log('saveItems', arguments);
-			    this.$.model.save();
-			},
-
-			onDeleteItem: function(e){
-				console.log('onDeleteItem', e, e.target.index);
-				var removed = this.items.splice(e.target.index, 1);
-				console.log(removed[0].text);
-			},
-
-			attributeChanged: function(attrName, oldVal, newVal) {
-			    //var newVal = this.getAttribute(attrName);
-			    // console.log(attrName, 'old: ' + oldVal, 'new:', newVal);
-			},
-
-		});
-	</script>
+	<script src='todo-mvc.js'></script>
 
 </polymer-element>
 	

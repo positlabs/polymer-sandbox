@@ -10,7 +10,6 @@
 		
 		<paper-item class="{{ {done: done, deleted: deleted} | tokenList }}">
 			<span flex>{{text}}</span>
-			<!-- <span flex>{{index}}. {{text}}</span> -->
 			<paper-icon-button on-click={{onClickDelete}} icon="delete"></paper-icon-button>
 			<paper-checkbox checked={{done}}></paper-checkbox>
 		</paper-item>
@@ -20,10 +19,6 @@
 	<script>
 		Polymer({
 
-			ready: function(){
-
-			},
-			
 			onClickDelete: function(){
 				var _this = this;
 				setTimeout(function(){
