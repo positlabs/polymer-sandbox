@@ -1,0 +1,105 @@
+<!-- <link rel="import" href="../../bower_components/paper-button/paper-button.html"> -->
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-dropdown/paper-dropdown.html">
+
+
+<polymer-element name="hue-light" attributes="data state">
+
+	<template>
+
+		<style>
+
+			:host {
+				/*margin-bottom: 50px;*/
+				overflow: hidden;
+				float: left;
+				padding: 30px 30px 100px;
+			}
+
+			h6 {
+				margin: 10px 0;
+				line-height: 1;
+			}
+		
+		</style>
+
+		<h3>{{name}} : {{type}}</h3>
+
+		<h6>on/off</h6>
+		<paper-toggle-button checked='{{state.on}}' on-change='{{postState}}'></paper-toggle-button>
+		
+		<h6>brightness</h6>
+		<paper-slider min="0" max="100" step='1' snaps='true' value="{{state.bri}}" on-change='{{postState}}'></paper-slider>
+		
+		<h6>saturation</h6>
+		<paper-slider min="0" max="255" step='1' snaps='true' value="{{state.sat}}" on-change='{{postState}}'></paper-slider>
+		
+		<h6>hue</h6>
+		<paper-slider min="0" max="65535" value="{{state.hue}}" on-change='{{postState}}'></paper-slider>
+
+		<h6>effect</h6>
+		<select value='{{state.effect}}' on-change='{{postState}}'>
+			<option>none</option>
+			<option>colorloop</option>
+		</select>
+
+
+	</template>
+	
+	<script>
+
+	// {
+	// 	"1":{
+	// 		"state": {
+	// 			"on":false,
+	// 			"bri":8,
+	// 			"hue":9880,
+	// 			"sat":251,
+	// 			"effect":"none",
+	// 			"xy":[0.5776,0.4093],
+	// 			"alert":"none",
+	// 			"colormode":"xy",
+	// 			"reachable":true
+	// 		}, 
+	// 		"type": "Color light", 
+	// 		"name": "LivingColors 1", 
+	// 		"modelid": "LLC011",
+	// 		"uniqueid":"00:17:88:01:00:c1:08:0c-0b", 
+	// 		"swversion": "66009461", 
+	// 		"pointsymbol": { "1":"none", "2":"none", "3":"none", "4":"none", "5":"none", "6":"none", "7":"none", "8":"none"}
+	// 	}	
+	// }
+
+	Polymer('hue-light', {
+
+		created: function(){
+			this.data = {};
+			this.state = {};
+			this.name = '';
+			this.type = '';
+		},
+
+		postState: function(){
+			console.log('hue-light.postState', this.state);
+			var _this = this;
+			setTimeout(function(){
+				_this.fire('state-changed', _this);
+			}, 1);
+		},
+
+		dataChanged: function(){
+			console.log('hue-light.dataChanged');
+			var data = this.data;
+			this.state = data.state;
+			this.name = data.name;
+			this.type = data.type;
+		}
+
+	});
+
+	</script>
+
+</polymer-element>

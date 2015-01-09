@@ -1,0 +1,55 @@
+<link rel="import" href="../../bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../hue-light/hue-light.html">
+<link rel="import" href="../mixins.html">
+
+<polymer-element name="hue-ui" attributes="">
+
+	<template>
+
+		<style>
+		
+			paper-button {
+				border: 1px solid cyan;
+			}
+
+		</style>
+
+		<core-ajax auto
+			url='https://www.meethue.com/api/nupnp'
+			handleAs="json"
+    		on-core-response="{{gotBridgeList}}">
+    	</core-ajax>
+
+		<h1>Bridge list</h1>
+		<template repeat="{{bridge in bridgeList}}">
+			<paper-button on-click={{onClickBridgeIP}}>{{bridge.internalipaddress}}</paper-button>
+		</template>
+
+
+		<div class='new-user-input'>
+			<paper-button on-click={{onClickAddNewUser}}>add new user</paper-button>
+			<!-- <paper-input label="user name" committedValue="{{newUsername}}"></paper-input> -->
+		</div>
+
+		<paper-dialog heading="Action required" id='pair-hue-bridge-dialogue'>
+			<p>Please click the button on the Hue Bridge</p>
+			<paper-button on-click="{{onClickDialogueOK}}">OK, I clicked it!</paper-button>
+		</paper-dialog>
+
+		<paper-button on-click='{{getLightList}}'>get lights</paper-button>
+
+		<div class='lights'>
+			<template repeat='{{light in lights}}'>
+				<hue-light data={{light}} on-state-changed='{{postLightState}}'></hue-light>
+			</template>
+		</div>
+
+
+	</template>
+	
+	<script src='hue-ui.js'></script>
+
+</polymer-element>
