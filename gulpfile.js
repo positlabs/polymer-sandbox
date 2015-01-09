@@ -4,6 +4,7 @@ var vulcanize =     require('gulp-vulcanize'); // https://www.npmjs.com/package/
 var traceur =   	require('gulp-traceur'); // https://www.npmjs.com/package/gulp-traceur
 var bourbon =       require('node-bourbon');
 var rename =        require('gulp-rename');
+var plumber =       require('gulp-plumber');
 var jade = 			require('jade');
 var fs = 			require('fs');
 var merge = 		require('merge');
@@ -29,10 +30,11 @@ gulp.task('components:styles', function (){
 });
 
 gulp.task('components:scripts', function(){
-	//TODO: sourcemaps. 
+	//FIXME: sourcemaps. not working for some reason. File name appearch correct, but points to compiled js file
 
 	return gulp.src(paths.componentES6)
 		// .pipe(sourcemaps.init())
+		.pipe(plumber())
 		.pipe(traceur())
 		.pipe(rename(function (path) {
 			path.basename = path.basename.replace('.es6', '');
